@@ -1,9 +1,9 @@
 class KeycloakController < ApplicationController
-
+ ## initialize global keycloak variables
   def initialize
 
     @keycloak_client_id         = "ruby-demo"
-    @keycloak_client_secret     = "9b5e9641-e2d0-4ab1-bdb1-bfa7d94f7823"
+    @keycloak_client_secret     = "0805a3e5-c384-4bb5-aa68-cc118e1eb3af"
     @keycloak_redirect_uri      = "http://localhost:3000/keycloak-callback"
     @keycloak_authorization_url = "http://localhost:8080/auth/realms/oidc_demo/protocol/openid-connect/auth"
     @keycloak_token_url         = "http://localhost:8080/auth/realms/oidc_demo/protocol/openid-connect/token"
@@ -27,7 +27,7 @@ class KeycloakController < ApplicationController
     @token = auth_code.to_hash[:access_token]
 
     uri = URI.parse("#{@keycloak_attributes_url}")
-      request = Net::HTTP::Get.new(uri)
+      request = Net::HTTP::Get.new(uri)                                
       request["Authorization"] = "Bearer #{@token}"
     
       req_options = {
@@ -52,7 +52,12 @@ class KeycloakController < ApplicationController
   # LOGOUT of current session (Work in Progress-15Mar22)
   def logout
 
-    HTTP.post("http://localhost:8080/auth/realms/oidc_demo/protocol/openid-connect/logout")
+    # # First attempt at LOGOUT using Keycloak Post
+    # HTTP.post("http://localhost:8080/auth/realms/oidc_demo/protocol/openid-connect/logout?redirect_uri=encodedRedirectUri ")
+
+    # # Second attempt at Logout
+    # uri = URI('http://localhost:8080/auth/realms/oidc_demo/protocol/openid-connect/logout?redirect_uri=encodedRedirectUri')
+    # res = Net::HTTP.post_form(uri)
 
     # Reset Rails session
     reset_session
